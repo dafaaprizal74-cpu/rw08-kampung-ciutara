@@ -1,0 +1,40 @@
+name: Build APK RW 08 Ciutara
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Extract project
+        run: |
+          unzip -o RW08_Ciutara_Android_Project_v1.zip
+          cd RW08_Ciutara_Android
+          ls
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10'
+
+      - name: Build APK
+        run: |
+          cd RW08_Ciutara_Android
+          gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RW08-Ciutara-APK
+          path: RW08_Ciutara_Android/app/build/outputs/apk/debug/*.apk
